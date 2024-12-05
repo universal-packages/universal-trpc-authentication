@@ -4,10 +4,15 @@ import { CurrentAuthentication } from './types'
 
 export const CURRENT_AUTHENTICATION: CurrentAuthentication = { instance: null, options: null }
 
-export async function initialize(options: AuthenticationOptions): Promise<CurrentAuthentication> {
+export async function initialize(options: AuthenticationOptions): Promise<CurrentAuthentication>
+export async function initialize<A extends Authentication<any>>(instance: A): Promise<CurrentAuthentication>
+export async function initialize<A extends Authentication<any>>(optionsOrInstance: AuthenticationOptions | A): Promise<CurrentAuthentication> {
   if (!CURRENT_AUTHENTICATION.instance) {
-    CURRENT_AUTHENTICATION.options = { ...options }
-    CURRENT_AUTHENTICATION.instance = new Authentication(CURRENT_AUTHENTICATION.options)
+    const finalOptions = optionsOrInstance instanceof Authentication ? optionsOrInstance.options : optionsOrInstance
+    const finalInstance = optionsOrInstance instanceof Authentication ? optionsOrInstance : (new Authentication(finalOptions) as A)
+
+    CURRENT_AUTHENTICATION.options = { ...finalOptions }
+    CURRENT_AUTHENTICATION.instance = finalInstance
 
     await CURRENT_AUTHENTICATION.instance.loadDynamics()
 
