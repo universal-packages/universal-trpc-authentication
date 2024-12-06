@@ -10,11 +10,12 @@ export async function initialize<A extends Authentication<any>>(optionsOrInstanc
   if (!CURRENT_AUTHENTICATION.instance) {
     const finalOptions = optionsOrInstance instanceof Authentication ? optionsOrInstance.options : optionsOrInstance
     const finalInstance = optionsOrInstance instanceof Authentication ? optionsOrInstance : (new Authentication(finalOptions) as A)
+    const instanceWasPassed = optionsOrInstance instanceof Authentication
 
     CURRENT_AUTHENTICATION.options = { ...finalOptions }
     CURRENT_AUTHENTICATION.instance = finalInstance
 
-    await CURRENT_AUTHENTICATION.instance.loadDynamics()
+    if (!instanceWasPassed) await CURRENT_AUTHENTICATION.instance.loadDynamics()
 
     return CURRENT_AUTHENTICATION
   } else {
