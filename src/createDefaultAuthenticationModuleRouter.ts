@@ -2,11 +2,9 @@ import { TRPCError, initTRPC } from '@trpc/server'
 import { z } from 'zod'
 
 import { CURRENT_AUTHENTICATION } from './initialize'
-import { TrpcAuthenticationResult } from './types'
+import { BaseTrpcAuthenticationResult } from './types'
 
-export function createDefaultAuthenticationModuleRouter<U extends Record<string, any>, S extends Record<string, any>, T extends ReturnType<typeof initTRPC.create>>(
-  trpcInstance: T
-) {
+export function createDefaultAuthenticationModuleRouter<U extends Record<string, any>, T extends ReturnType<typeof initTRPC.create>>(trpcInstance: T) {
   return trpcInstance.router({
     logIn: trpcInstance.procedure
       .input(
@@ -15,7 +13,7 @@ export function createDefaultAuthenticationModuleRouter<U extends Record<string,
           password: z.string()
         })
       )
-      .mutation(async ({ input, ctx }): Promise<TrpcAuthenticationResult<U, S>> => {
+      .mutation(async ({ input, ctx }): Promise<BaseTrpcAuthenticationResult & { user: U; sessionToken: string }> => {
         const result = await CURRENT_AUTHENTICATION.instance.performDynamic('log-in', { email: input.email, password: input.password })
 
         if (result.status === 'success') {
@@ -38,7 +36,7 @@ export function createDefaultAuthenticationModuleRouter<U extends Record<string,
           email: z.string()
         })
       )
-      .mutation(async ({ input }): Promise<TrpcAuthenticationResult<U, S>> => {
+      .mutation(async ({ input }): Promise<BaseTrpcAuthenticationResult> => {
         await CURRENT_AUTHENTICATION.instance.performDynamic('request-password-reset', { email: input.email })
 
         return {
@@ -52,7 +50,7 @@ export function createDefaultAuthenticationModuleRouter<U extends Record<string,
           password: z.string()
         })
       )
-      .mutation(async ({ input, ctx }): Promise<TrpcAuthenticationResult<U, S>> => {
+      .mutation(async ({ input, ctx }): Promise<BaseTrpcAuthenticationResult & { user: U; sessionToken: string }> => {
         const result = await CURRENT_AUTHENTICATION.instance.performDynamic('sign-up', { email: input.email, password: input.password })
 
         if (result.status === 'success') {
@@ -70,7 +68,12 @@ export function createDefaultAuthenticationModuleRouter<U extends Record<string,
           }
         }
 
-        return { status: 'failure', validation: result.validation }
+        return {
+          user: null,
+          sessionToken: null,
+          status: 'failure',
+          validation: result.validation
+        }
       }),
     updateEmailPassword: trpcInstance.procedure
       .input(
@@ -79,7 +82,7 @@ export function createDefaultAuthenticationModuleRouter<U extends Record<string,
           password: z.string().optional()
         })
       )
-      .mutation(async ({ input, ctx }): Promise<TrpcAuthenticationResult<U, S>> => {
+      .mutation(async ({ input, ctx }): Promise<BaseTrpcAuthenticationResult & { user: U }> => {
         const user = await CURRENT_AUTHENTICATION.instance.performDynamic('user-from-context', { context: ctx })
 
         if (user) {
@@ -95,6 +98,7 @@ export function createDefaultAuthenticationModuleRouter<U extends Record<string,
           }
 
           return {
+            user: null,
             status: 'failure',
             validation: result.validation
           }
@@ -110,7 +114,7 @@ export function createDefaultAuthenticationModuleRouter<U extends Record<string,
           password: z.string()
         })
       )
-      .mutation(async ({ input }): Promise<TrpcAuthenticationResult<U, S>> => {
+      .mutation(async ({ input }): Promise<BaseTrpcAuthenticationResult> => {
         const result = await CURRENT_AUTHENTICATION.instance.performDynamic('verify-password-reset', {
           email: input.email,
           oneTimePassword: input.oneTimePassword,

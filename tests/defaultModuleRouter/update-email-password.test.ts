@@ -29,7 +29,8 @@ describe('DefaultModuleController', (): void => {
               password: ['password-out-of-size']
             },
             valid: false
-          }
+          },
+          user: null
         })
       })
     })

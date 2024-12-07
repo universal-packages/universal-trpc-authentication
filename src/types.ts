@@ -43,12 +43,9 @@ export interface UnsetSessionPayload<U = Record<string, any>, C = Record<string,
   sessionId?: string
 }
 
-export interface TrpcAuthenticationResult<U = Record<string, any>, S = Record<string, any>> {
-  user?: U
+export interface BaseTrpcAuthenticationResult<M = Record<string, any>> {
   message?: string
-  metadata?: Record<string, any>
-  sessions?: Record<string, S>
-  sessionToken?: string
+  metadata?: M
   status: 'success' | 'failure' | 'warning'
   validation?: ValidationResult
 }
