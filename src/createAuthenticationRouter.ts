@@ -10,7 +10,7 @@ export function createAuthenticationRouter<U extends Record<string, any>, S exte
       .input(
         z
           .object({
-            sessionId: z.string()
+            sessionId: z.string().optional()
           })
           .optional()
       )
