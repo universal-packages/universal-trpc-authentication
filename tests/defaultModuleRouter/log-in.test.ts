@@ -19,6 +19,7 @@ describe('DefaultModuleController', (): void => {
 
         expect(await trpcJest.client(appRouter).logIn.mutate({ email: 'email', password: 'password' })).toEqual({
           sessionToken: '',
+          status: 'success',
           user: { id: 99, email: 'david@universal-packages.com' }
         })
       })

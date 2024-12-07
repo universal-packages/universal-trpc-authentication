@@ -20,7 +20,9 @@ export function createAuthenticationRouter<U extends Record<string, any>, S exte
         if (user) {
           await CURRENT_AUTHENTICATION.instance.performDynamic('unset-session', { context: ctx, user, sessionId: input?.sessionId })
 
-          return {}
+          return {
+            status: 'success'
+          }
         } else {
           throw new TRPCError({ code: 'UNAUTHORIZED' })
         }
@@ -32,7 +34,8 @@ export function createAuthenticationRouter<U extends Record<string, any>, S exte
         const rendered = await CURRENT_AUTHENTICATION.instance.performDynamic('render-user', { user })
 
         return {
-          user: rendered as unknown as U
+          status: 'success',
+          user: rendered as U
         }
       } else {
         throw new TRPCError({ code: 'UNAUTHORIZED' })
@@ -45,7 +48,8 @@ export function createAuthenticationRouter<U extends Record<string, any>, S exte
         const renderedSessions = await CURRENT_AUTHENTICATION.instance.performDynamic('render-sessions', { user, context: ctx })
 
         return {
-          sessions: renderedSessions as unknown as Record<string, S>
+          sessions: renderedSessions as Record<string, S>,
+          status: 'success'
         }
       } else {
         throw new TRPCError({ code: 'UNAUTHORIZED' })
@@ -62,7 +66,9 @@ export function createAuthenticationRouter<U extends Record<string, any>, S exte
 
         if (user) {
           await CURRENT_AUTHENTICATION.instance.performDynamic('set-session-device-id', { user, context: ctx, deviceId: input.deviceId })
-          return {}
+          return {
+            status: 'success'
+          }
         } else {
           throw new TRPCError({ code: 'UNAUTHORIZED' })
         }

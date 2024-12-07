@@ -49,5 +49,6 @@ export interface TrpcAuthenticationResult<U = Record<string, any>, S = Record<st
   metadata?: Record<string, any>
   sessions?: Record<string, S>
   sessionToken?: string
+  status: 'success' | 'failure' | 'warning'
   validation?: ValidationResult
 }

@@ -19,13 +19,14 @@ export function createDefaultAuthenticationModuleRouter<U extends Record<string,
         const result = await CURRENT_AUTHENTICATION.instance.performDynamic('log-in', { email: input.email, password: input.password })
 
         if (result.status === 'success') {
-          const sessionToken = await await CURRENT_AUTHENTICATION.instance.performDynamic('set-session', { user: result.user, context: ctx })
+          const sessionToken = await CURRENT_AUTHENTICATION.instance.performDynamic('set-session', { user: result.user, context: ctx })
 
           const rendered = await CURRENT_AUTHENTICATION.instance.performDynamic('render-user', { user: result.user })
 
           return {
-            user: rendered as unknown as U,
-            sessionToken
+            user: rendered as U,
+            sessionToken,
+            status: 'success'
           }
         }
 
@@ -40,7 +41,9 @@ export function createDefaultAuthenticationModuleRouter<U extends Record<string,
       .mutation(async ({ input }): Promise<TrpcAuthenticationResult<U, S>> => {
         await CURRENT_AUTHENTICATION.instance.performDynamic('request-password-reset', { email: input.email })
 
-        return {}
+        return {
+          status: 'success'
+        }
       }),
     signUp: trpcInstance.procedure
       .input(
@@ -61,12 +64,13 @@ export function createDefaultAuthenticationModuleRouter<U extends Record<string,
           const rendered = await CURRENT_AUTHENTICATION.instance.performDynamic('render-user', { user: result.user })
 
           return {
-            user: rendered as unknown as U,
-            sessionToken
+            user: rendered as U,
+            sessionToken,
+            status: 'success'
           }
         }
 
-        return { validation: result.validation }
+        return { status: 'failure', validation: result.validation }
       }),
     updateEmailPassword: trpcInstance.procedure
       .input(
@@ -85,11 +89,15 @@ export function createDefaultAuthenticationModuleRouter<U extends Record<string,
             const rendered = await CURRENT_AUTHENTICATION.instance.performDynamic('render-user', { user: result.user })
 
             return {
-              user: rendered as unknown as U
+              user: rendered as U,
+              status: 'success'
             }
           }
 
-          return { validation: result.validation }
+          return {
+            status: 'failure',
+            validation: result.validation
+          }
         } else {
           throw new TRPCError({ code: 'UNAUTHORIZED' })
         }
@@ -113,10 +121,15 @@ export function createDefaultAuthenticationModuleRouter<U extends Record<string,
           if (result.message === 'invalid-one-time-password') {
             throw new TRPCError({ code: 'BAD_REQUEST', message: 'invalid-one-time-password' })
           }
-          return { validation: result.validation }
+          return {
+            status: 'failure',
+            validation: result.validation
+          }
         }
 
-        return {}
+        return {
+          status: 'success'
+        }
       })
   })
 }

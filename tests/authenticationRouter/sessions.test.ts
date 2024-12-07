@@ -12,7 +12,7 @@ describe('AuthenticationController', (): void => {
   describe('sessions', (): void => {
     describe('when an user is in session', (): void => {
       it('returns ok and renders the sessions', async (): Promise<void> => {
-        expect(await trpcJest.client(appRouter).sessions.query()).toEqual({ sessions: {} })
+        expect(await trpcJest.client(appRouter).sessions.query()).toEqual({ status: 'success', sessions: {} })
       })
     })
 

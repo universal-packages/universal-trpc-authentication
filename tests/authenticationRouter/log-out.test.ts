@@ -12,7 +12,7 @@ describe('AuthenticationController', (): void => {
   describe('log-out', (): void => {
     describe('when a successful log out happens', (): void => {
       it('returns ok and the rendered session data', async (): Promise<void> => {
-        expect(await trpcJest.client(appRouter).logOut.mutate()).toEqual({})
+        expect(await trpcJest.client(appRouter).logOut.mutate()).toEqual({ status: 'success' })
       })
     })
 

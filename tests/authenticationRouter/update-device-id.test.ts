@@ -12,7 +12,7 @@ describe('AuthenticationController', (): void => {
   describe('update-device-id', (): void => {
     describe('when an user is in session', (): void => {
       it('returns ok and sets the device id', async (): Promise<void> => {
-        expect(await trpcJest.client(appRouter).updateDeviceId.mutate({ deviceId: 'my-device-id' })).toEqual({})
+        expect(await trpcJest.client(appRouter).updateDeviceId.mutate({ deviceId: 'my-device-id' })).toEqual({ status: 'success' })
       })
     })
 

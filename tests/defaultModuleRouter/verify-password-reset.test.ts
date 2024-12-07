@@ -17,7 +17,7 @@ describe('DefaultModuleController', (): void => {
         dynamicApiJest.mockDynamicReturnValue(VerifyOneTimePassword, true)
         dynamicApiJest.mockDynamicReturnValue(UserFromEmailDynamic, { id: 99, email: 'david@universal-packages.com' })
 
-        expect(await trpcJest.client(appRouter).verifyPasswordReset.mutate({ email: 'email', oneTimePassword: '123', password: 'new-password' })).toEqual({})
+        expect(await trpcJest.client(appRouter).verifyPasswordReset.mutate({ email: 'email', oneTimePassword: '123', password: 'new-password' })).toEqual({ status: 'success' })
       })
     })
 
@@ -37,6 +37,7 @@ describe('DefaultModuleController', (): void => {
         dynamicApiJest.mockDynamicReturnValue(UserFromEmailDynamic, { id: 99, email: 'david@universal-packages.com' })
 
         expect(await trpcJest.client(appRouter).verifyPasswordReset.mutate({ email: 'email', oneTimePassword: '123', password: 'short' })).toEqual({
+          status: 'failure',
           validation: {
             errors: {
               password: ['password-out-of-size']

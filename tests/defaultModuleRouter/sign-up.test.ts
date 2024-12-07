@@ -17,6 +17,7 @@ describe('DefaultModuleController', (): void => {
 
         expect(await trpcJest.client(appRouter).signUp.mutate({ email: 'DAVID@UNIVERSAL.com', password: '12345678' })).toEqual({
           user: { id: 99, email: 'david@universal-packages' },
+          status: 'success',
           sessionToken: ''
         })
       })
@@ -25,6 +26,7 @@ describe('DefaultModuleController', (): void => {
     describe('when invalid input is passed', (): void => {
       it('returns bad request', async (): Promise<void> => {
         expect(await trpcJest.client(appRouter).signUp.mutate({ email: 'a', password: 'b' })).toEqual({
+          status: 'failure',
           validation: {
             errors: {
               email: ['invalid-email'],

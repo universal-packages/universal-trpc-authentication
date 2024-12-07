@@ -15,7 +15,7 @@ describe('DefaultModuleController', (): void => {
       it('returns ok', async (): Promise<void> => {
         dynamicApiJest.mockDynamicReturnValue(UserFromEmailDynamic, { id: 99, email: 'david@universal-packages.com' })
 
-        expect(await trpcJest.client(appRouter).requestPasswordReset.mutate({ email: 'email' })).toEqual({})
+        expect(await trpcJest.client(appRouter).requestPasswordReset.mutate({ email: 'email' })).toEqual({ status: 'success' })
       })
     })
 
@@ -23,7 +23,7 @@ describe('DefaultModuleController', (): void => {
       it('still returns ok', async (): Promise<void> => {
         dynamicApiJest.mockDynamicReturnValue(UserFromEmailDynamic, { id: 99, email: 'david@universal-packages.com' })
 
-        expect(await trpcJest.client(appRouter).requestPasswordReset.mutate({ email: 'email' })).toEqual({})
+        expect(await trpcJest.client(appRouter).requestPasswordReset.mutate({ email: 'email' })).toEqual({ status: 'success' })
       })
     })
   })
