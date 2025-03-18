@@ -15,7 +15,7 @@ describe('DefaultModuleController', (): void => {
       it('returns ok and the rendered session data', async (): Promise<void> => {
         dynamicApiJest.mockDynamicReturnValue(CreateUserDynamic, { id: 99, email: 'david@universal-packages' })
 
-        expect(await trpcJest.client(appRouter).signUp.mutate({ email: 'DAVID@UNIVERSAL.com', password: '12345678' })).toEqual({
+        expect(await trpcJest.client(appRouter).signUp.mutate({ email: 'DAVID@UNIVERSAL.com', password: '12345678', locale: 'en-US' })).toEqual({
           user: { id: 99, email: 'david@universal-packages' },
           status: 'success',
           sessionToken: ''
