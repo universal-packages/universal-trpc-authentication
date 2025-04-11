@@ -48,11 +48,17 @@ export function createDefaultAuthenticationModuleRouter<U extends Record<string,
         z.object({
           email: z.string(),
           password: z.string(),
-          locale: z.string().optional()
+          locale: z.string().optional(),
+          timezone: z.string().optional()
         })
       )
       .mutation(async ({ input, ctx }): Promise<BaseTrpcAuthenticationResult & { user: U; sessionToken: string }> => {
-        const result = await CURRENT_AUTHENTICATION.instance.performDynamic('sign-up', { email: input.email, password: input.password, locale: input.locale })
+        const result = await CURRENT_AUTHENTICATION.instance.performDynamic('sign-up', {
+          email: input.email,
+          password: input.password,
+          locale: input.locale,
+          timezone: input.timezone
+        })
 
         if (result.status === 'success') {
           const sessionToken = await CURRENT_AUTHENTICATION.instance.performDynamic('set-session', {

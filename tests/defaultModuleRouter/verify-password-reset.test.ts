@@ -40,7 +40,7 @@ describe('DefaultModuleController', (): void => {
           status: 'failure',
           validation: {
             errors: {
-              password: ['password-out-of-size']
+              password: ['password-should-be-right-sized']
             },
             valid: false
           }

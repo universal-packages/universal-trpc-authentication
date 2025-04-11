@@ -17,7 +17,7 @@ describe('DefaultModuleController', (): void => {
         dynamicApiJest.mockDynamicReturnValue(UserFromEmailDynamic, { id: 99, email: 'david@universal-packages.com' })
         dynamicApiJest.mockDynamicReturnValue(DoPasswordsMatch, true)
 
-        expect(await trpcJest.client(appRouter).logIn.mutate({ email: 'email', password: 'password' })).toEqual({
+        expect(await trpcJest.client(appRouter).logIn.mutate({ email: 'email@email.com', password: 'password' })).toEqual({
           sessionToken: '',
           status: 'success',
           user: { id: 99, email: 'david@universal-packages.com' }
@@ -27,7 +27,7 @@ describe('DefaultModuleController', (): void => {
 
     describe('when the log in attempt fails', (): void => {
       it('returns invalid credentials message', async (): Promise<void> => {
-        await expect(trpcJest.client(appRouter).logIn.mutate({ email: 'email', password: 'password' })).rejects.toThrow('invalid-credentials')
+        await expect(trpcJest.client(appRouter).logIn.mutate({ email: 'email@email.com', password: 'password' })).rejects.toThrow('invalid-credentials')
       })
     })
   })

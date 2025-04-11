@@ -25,12 +25,14 @@ describe('DefaultModuleController', (): void => {
 
     describe('when invalid input is passed', (): void => {
       it('returns bad request', async (): Promise<void> => {
-        expect(await trpcJest.client(appRouter).signUp.mutate({ email: 'a', password: 'b' })).toEqual({
+        expect(await trpcJest.client(appRouter).signUp.mutate({ email: 'a', password: 'b', locale: 'bad-locale', timezone: 'bad-timezone' })).toEqual({
           status: 'failure',
           validation: {
             errors: {
-              email: ['invalid-email'],
-              password: ['password-out-of-size']
+              email: ['email-should-be-right-sized'],
+              password: ['password-should-be-right-sized'],
+              locale: ['locale-should-be-a-valid-locale'],
+              timezone: ['timezone-should-be-a-valid-timezone']
             },
             valid: false
           },
