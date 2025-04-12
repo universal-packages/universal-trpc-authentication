@@ -16,7 +16,7 @@
     "update-universal-dependencies": "umaintenance update-universal-dependencies"
   },
   "dependencies": {
-    "@universal-packages/authentication": "^1.20.0",
+    "@universal-packages/authentication": "^1.21.0",
     "zod": "^3.23.8"
   },
   "peerDependencies": {
